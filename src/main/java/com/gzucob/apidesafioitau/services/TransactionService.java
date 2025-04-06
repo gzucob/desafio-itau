@@ -17,15 +17,16 @@ public class TransactionService {
         transaction.add(transactionModel);
     }
 
-    public void clearTransaction() {
-        transaction.clear();
-    }
-
     public DoubleSummaryStatistics getStatistics() {
         OffsetDateTime dataHoraNow = OffsetDateTime.now();
+        OffsetDateTime limit = dataHoraNow.minusSeconds(60);
         return transaction.stream()
-                .filter(t -> t.getDataHora().isAfter(dataHoraNow.minusSeconds(60)))
+                .filter(t -> t.getDataHora().isAfter(limit))
                 .mapToDouble(TransactionModel::getValor)
                 .summaryStatistics();
+    }
+
+    public void clearTransaction() {
+        transaction.clear();
     }
 }
