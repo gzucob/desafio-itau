@@ -37,4 +37,10 @@ public class TransactionController {
         DoubleSummaryStatistics statistics = transactionService.getStatistics();
         return ResponseEntity.ok(new StatisticsResponse(statistics));
     }
+
+    @DeleteMapping("/transacao")
+    public ResponseEntity<Void> deleteTransaction() {
+        transactionService.clearTransaction();
+        return ResponseEntity.ok().build();
+    }
 }
