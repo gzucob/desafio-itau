@@ -1,41 +1,28 @@
 package com.gzucob.apidesafioitau.dto;
 
+import lombok.Getter;
+
 import java.util.DoubleSummaryStatistics;
 
+@Getter
 public class StatisticsResponse {
 
-    private long count;
-    private double sum;
-    private double avg;
-    private double min;
-    private double max;
+    private final Long count;
+    private final Double sum;
+    private final Double avg;
+    private final Double min;
+    private final Double max;
+
+    public StatisticsResponse() {
+        this(new DoubleSummaryStatistics());
+    }
 
     public StatisticsResponse(DoubleSummaryStatistics stats) {
         this.count = stats.getCount();
         this.sum = stats.getSum();
         this.avg = stats.getAverage();
-        this.min = stats.getMin();
-        this.max = stats.getMax();
-    }
-
-    public long getCount() {
-        return count;
-    }
-
-    public double getSum() {
-        return sum;
-    }
-
-    public double getAvg() {
-        return avg;
-    }
-
-    public double getMin() {
-        return min;
-    }
-
-    public double getMax() {
-        return max;
+        this.min = stats.getMin() == Double.POSITIVE_INFINITY ? 0 : stats.getMin();
+        this.max = stats.getMax() == Double.NEGATIVE_INFINITY ? 0 : stats.getMax();
     }
 }
 
