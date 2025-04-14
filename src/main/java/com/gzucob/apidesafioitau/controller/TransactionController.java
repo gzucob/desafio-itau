@@ -4,6 +4,7 @@ import com.gzucob.apidesafioitau.dto.StatisticsResponse;
 import com.gzucob.apidesafioitau.dto.TransactionRequest;
 import com.gzucob.apidesafioitau.services.TransactionService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.DoubleSummaryStatistics;
 
 @RestController
 @RequestMapping("/desafio-itau")
+@Slf4j
 public class TransactionController {
 
     private TransactionService transactionService;
@@ -23,18 +25,21 @@ public class TransactionController {
     @PostMapping("/transacao")
     public ResponseEntity<Void> createTransaction(@Valid @RequestBody TransactionRequest request) {
         transactionService.addTransaction(new TransactionRequest(request.valor(), request.dataHora()));
+        log.info("Transação registrada com sucesso!");
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/estatisticas")
     public ResponseEntity<StatisticsResponse> getStatistics() {
         DoubleSummaryStatistics statistics = transactionService.getStatistics();
+        log.info("Estatisticas geradas com sucesso!");
         return ResponseEntity.ok(new StatisticsResponse(statistics));
     }
 
     @DeleteMapping("/transacao")
     public ResponseEntity<Void> deleteTransaction() {
         transactionService.clearTransaction();
+        log.info("Transação deletada com sucesso!");
         return ResponseEntity.ok().build();
     }
 }
