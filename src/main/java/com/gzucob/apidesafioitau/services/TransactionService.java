@@ -34,11 +34,10 @@ public class TransactionService {
         transaction.add(transactionRequest);
     }
 
-    public DoubleSummaryStatistics getStatistics() {
-        OffsetDateTime dataHoraNow = OffsetDateTime.now();
-        OffsetDateTime limit = dataHoraNow.minusSeconds(60);
+    public DoubleSummaryStatistics getStatistics(Integer seconds) {
+        OffsetDateTime datelimit = OffsetDateTime.now().minusSeconds(seconds);
         return transaction.stream()
-                .filter(t -> t.dataHora().isAfter(limit))
+                .filter(t -> t.dataHora().isAfter(datelimit))
                 .map(TransactionRequest::valor)
                 .mapToDouble(BigDecimal::doubleValue) //Sei que não seria o ideal fazer essa conversão
                 .summaryStatistics();

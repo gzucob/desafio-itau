@@ -16,7 +16,7 @@ import java.util.DoubleSummaryStatistics;
 @Slf4j
 public class TransactionController {
 
-    private TransactionService transactionService;
+    private final TransactionService transactionService;
 
     public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
@@ -30,8 +30,12 @@ public class TransactionController {
     }
 
     @GetMapping("/estatisticas")
-    public ResponseEntity<StatisticsResponse> getStatistics() {
-        DoubleSummaryStatistics statistics = transactionService.getStatistics();
+    public ResponseEntity<StatisticsResponse> getStatistics(@RequestParam(value = "seconds", defaultValue = "60") Integer seconds) {
+        if (seconds < 0) {
+            log.warn("Segundo negativo, retornado valores dos utlimos 60s");
+            seconds = 60; //Não trava a requisição, mas retorna o filtro padrão 60s
+        }
+        DoubleSummaryStatistics statistics = transactionService.getStatistics(seconds);
         log.info("Estatisticas geradas com sucesso!");
         return ResponseEntity.ok(new StatisticsResponse(statistics));
     }
