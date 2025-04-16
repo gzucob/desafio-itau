@@ -23,8 +23,9 @@ public class TransactionController {
     }
 
     @PostMapping("/transacao")
-    public ResponseEntity<Void> createTransaction(@Valid @RequestBody TransactionRequest request) {
-        transactionService.addTransaction(new TransactionRequest(request.valor(), request.dataHora()));
+    public ResponseEntity<Void> createTransaction(@Valid @RequestBody TransactionRequest transactionRequest) {
+        transactionRequest.validate();
+        transactionService.addTransaction(new TransactionRequest(transactionRequest.valor(), transactionRequest.dataHora()));
         log.info("Transação registrada com sucesso!");
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

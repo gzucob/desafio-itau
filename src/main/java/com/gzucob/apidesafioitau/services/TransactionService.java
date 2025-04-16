@@ -19,18 +19,6 @@ public class TransactionService {
     private final Queue<TransactionRequest> transaction = new ConcurrentLinkedQueue<>();
 
     public void addTransaction(TransactionRequest transactionRequest) {
-        if (transactionRequest.valor() == null || transactionRequest.dataHora() == null) {
-            log.error("O json não pode ser nulo");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-        if (transactionRequest.valor().compareTo(BigDecimal.ZERO) < 0) {
-            log.error("Valor não pode ser negativo!");
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-        if (transactionRequest.dataHora().isAfter(OffsetDateTime.now())) {
-            log.error("DataHora não pode ser maior que dataHora atual");
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
         transaction.add(transactionRequest);
     }
 
